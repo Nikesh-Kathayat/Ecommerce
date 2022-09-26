@@ -22,6 +22,8 @@ const db={};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+// till req,cate will have a function ((when run with Seq,seq then it return category model))
+db.Category = require("./category.model")(Sequelize,sequelize);
 
 // db.products=require("./productsmodel");
 module.exports=db;

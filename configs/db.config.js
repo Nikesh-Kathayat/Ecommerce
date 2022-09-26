@@ -11,4 +11,4 @@ module.exports = {
         idle :10000 //maximum time in ms that a connection can be idlebefore beig released
 
     }
-};
+}
