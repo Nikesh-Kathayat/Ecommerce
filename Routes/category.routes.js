@@ -18,10 +18,4 @@ module.exports =(app)=>{
 
     // delete a route by category id 
     app.delete("/ecomm/api/v1/category/:id",categoryControllers.delete);
-
-
-
-
-
-
 }

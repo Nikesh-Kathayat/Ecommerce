@@ -24,6 +24,13 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 // till req,cate will have a function ((when run with Seq,seq then it return category model))
 db.Category = require("./category.model")(Sequelize,sequelize);
+db.Product= require("./product.model")(Sequelize,sequelize);
 
-// db.products=require("./productsmodel");
+db.Category.hasMany(db.Product,{
+    foreignKey:"categoryId"
+});
+db.Product.belongsTo(db.Category);
+
+// db.products=require("./productsmodel"); 
 module.exports=db;
+ 
