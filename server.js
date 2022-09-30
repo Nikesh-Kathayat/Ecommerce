@@ -29,7 +29,7 @@ require("./Routes/category.routes")(app);
 require("./Routes/product.routes")(app);
    
 
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT,()=>{ 
     console.log(`Application is running in port ${process.env.PORT}`);
 })
-
+ 

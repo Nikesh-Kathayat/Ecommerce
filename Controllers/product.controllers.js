@@ -1,23 +1,13 @@
 
-const {Product} =require("../models");
+const {Product,Category} = require("../models");
 
 // const Product=db.Product;    (uper db to product) destructure
 
-exports.create=(req,res)=>{
+exports.create=(req,res)=>{ 
 
     const {name,description,cost,categoryId}=req.body;
+    const product ={name,description,cost,categoryId};
 
-
-    if(!name){
-        res.status(400).send({message:"Name of the product cannot be empty"});
-    }  
-
-    const product ={
-        name,
-        description,
-        cost,
-        categoryId
-    };
 
     Product.create(product)
     .then(product=>{
@@ -43,7 +33,7 @@ exports.findOne=(req,res)=>{
     const productId=req.params.id;
 
     Product.findByPk(productId)
-    .then(product=>{
+    .then(product =>{
         if(!product){
             res.status(404).send({message:"Product not found"});
         }
@@ -66,7 +56,7 @@ exports.update =(req,res)=>{
         product.description=description;
     }
     Product.update(product,{
-        where:{id:productId}
+        where:{id:productId} 
     })
     .then((updatedProduct)=>{
         res.send({message:`${updatedProduct[0]} records updated successfully`});
@@ -89,4 +79,36 @@ exports.delete= (req,res)=>{
         res.status(500).send({message:"Something went wrong"});
     }) 
 
+}
+
+exports.findProductsUnderCategory=(req,res)=>{
+
+    Product.findAll({
+        where:{
+            categoryId:req.params.categoryId
+        }
+    })
+    .then(products=>{
+        res.send(products);
+    })
+    .catch((err)=>{
+        res.status(500).send({message:"Something went wrong while getting products for given category Id"});
+    }) 
+}
+
+
+exports.findProductUnderCategory=(req,res)=>{
+
+    Product.findAll({
+        where:{
+            categoryId:req.params.categoryId,
+            id:req.params.productId
+        }
+    })
+    .then(product=>{
+        res.send(product);
+    })
+    .catch((err)=>{
+        res.status(500).send({message:"Something went wrong while getting products for given category Id"});
+    }) 
 }
