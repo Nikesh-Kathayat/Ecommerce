@@ -1,6 +1,6 @@
 const { User, Role, Sequelize, ROLES } = require("../models");
 const bcrypt = require("bcrypt");
-const e = require("express");
+const jwt =require("jsonwebtoken");
 
 
 exports.signup = async (req, res) => {
@@ -38,14 +38,21 @@ exports.signIn = async (req, res) => {
         return res.status(400).send({ message: "user not found" });
     }
     var isPasswordValid = bcrypt.compareSync(password, user.password);
-
     if (!isPasswordValid) {
         return res.status(401).send({ message: "Invalid Password" });
     }
+
+    console.log(user.Id);
+    
+
+    const token = jwt.sign({ id:user.id }, process.env.SECRET_KEY,{expiresIn:86400});
+    console.log(token);
+
     res.send({
         id: user.id,
         userName: user.userName,
         email: user.email,
-        roles: user.roles
+        roles: user.roles,
+        accessToken:token
     })
 }

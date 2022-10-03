@@ -3,6 +3,7 @@ const express = require("express");
 const config = require("./configs/db.config");
 // it converts into a json request 
 const bodyParser =require("body-parser");
+const {authJWT} =require("./Middlewares");
 
 require("dotenv").config();
 
@@ -30,14 +31,16 @@ db.sequelize.sync({force:false})
 //     name:"admin"
 // })
 
+// import auth routes 
+require("./Routes/auth.routes")(app);
+
+app.use(authJWT.verifyToken);
+
 // imported category routes
 require("./Routes/category.routes")(app); 
 
 // import product routes 
 require("./Routes/product.routes")(app);
-
-// import auth routes 
-require("./Routes/auth.routes")(app);
 
 // import user routes 
 require("./Routes/user.routes")(app);

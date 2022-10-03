@@ -28,7 +28,6 @@ exports.findAll =(req,res)=>{
 
     const {name,minCost,maxCost} = req.query;
 
-
     console.log(req.query);
 
     if(name){
