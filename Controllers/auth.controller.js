@@ -43,16 +43,23 @@ exports.signIn = async (req, res) => {
     }
 
     console.log(user.Id);
-    
+
 
     const token = jwt.sign({ id:user.id }, process.env.SECRET_KEY,{expiresIn:86400});
-    console.log(token);
+    
+    var roles=[];
+
+    const allRoles = await user.getRoles();
+
+    allRoles.forEach(role=>{
+        roles.push(role.name);
+    })
 
     res.send({
         id: user.id,
         userName: user.userName,
         email: user.email,
-        roles: user.roles,
+        roles: roles,
         accessToken:token
     })
 }

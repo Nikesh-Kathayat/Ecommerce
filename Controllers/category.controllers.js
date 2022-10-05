@@ -3,6 +3,10 @@ const Category =db.Category;
 
 exports.create = (req,res)=>{
 
+    if(!req.isAdmin){
+        return res.status(403).send({message:"OOPS! you are unauthorized to perform task"});
+    }
+
     // id auto generating ,so no need
 
     const category={
@@ -46,6 +50,11 @@ exports.getOne =(req,res)=>{
 }
 
 exports.update =(req,res)=>{
+
+    if(!req.isAdmin){
+        return res.status(403).send({message:"OOPS! you are unauthorized to perform task"});
+    }
+
     const categoryId=req.params.id;
     const {name,description} =req.body;
     const category={};
@@ -68,6 +77,11 @@ exports.update =(req,res)=>{
 }
 
 exports.delete= (req,res)=>{
+
+    if(!req.isAdmin){
+        return res.status(403).send({message:"OOPS! you are unauthorized to perform task"});
+    }
+
     const categoryId= req.params.id;
 
     Category.destroy({
