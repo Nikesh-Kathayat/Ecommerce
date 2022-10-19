@@ -9,24 +9,101 @@ exports.create= async (req,res)=>{
     const userId=req.user.id;
     
     const user = await User.findByPk(userId);  
-
-
-    // array of product id's
-    
+    // array of product id'  
     // const items=req.body.items;
-
     // const products= await Product.findAll({where:{id:items}});
     // cart.setProducts(products);
-    const cart = await Cart.create({userId:userId});
-    
-    
+    const cart = await Cart.create({userId:userId}); 
      res.send({message:"cart created successfully"});
 }
 
-exports.findCart= async (req,res)=>{
+exports.update=async (req,res)=>{
+
     const userId=req.user.id;
     
-    const user = await User.findByPk(userId);        
+    const user = await User.findByPk(userId);     
+
     const cart =await user.getCart();
-    res.send(cart);
+
+    if(!cart){
+        res.status(400).send({message:"No cart associated with the user"});
+    }
+
+    const userCart= await Cart.findByPk(cart.id);
+
+    const newproducts = await Product.findAll({where:{id:req.body.products}});
+    
+    if(!newproducts){
+        res.status(400).send({message:"No product exists from the given product Id's"});
+    }
+
+    const existingproducts = await userCart.getProducts();
+
+    // spread operator
+    const updatedProducts=[...existingproducts, ...newproducts];
+
+    userCart.setProducts(updatedProducts);
+
+    res.send(updatedProducts);
+
+}
+
+exports.findCart= async (req,res)=>{
+
+    const {products} =await findCartAndProducts(req.user.id);
+
+    let cost = 0;
+
+    for(let i=0;i<products.length;i++){
+        cost+= products[i].cost;
+    }
+
+    
+    res.send({products,totalCost:cost});
+}
+
+exports.deleteProductFromCart= async(req,res)=>{
+
+    const productId=parseInt(req.params.id);
+    const userId=req.user.id;
+    
+    const user = await User.findByPk(userId);     
+
+    const cart =await user.getCart();
+
+    if(!cart){
+        res.status(400).send({message:"No cart associated with the user"});
+    }
+
+    const userCart= await Cart.findByPk(cart.id);
+
+    const existingproducts = await userCart.getProducts();
+
+    const updatedProducts=existingproducts.filter((product)=>{
+        return product.id!==productId;
+
+    })
+
+    await userCart.setProducts(updatedProducts);
+
+    res.send(updatedProducts);
+}
+
+const findCartAndProducts = async (userId)=>{
+
+    
+    const user = await User.findByPk(userId);     
+
+    const cart =await user.getCart();
+
+    if(!cart){
+        res.status(400).send({message:"No cart associated with the user"});
+    }
+
+    const userCart= await Cart.findByPk(cart.id);
+
+    const existingproducts = await userCart.getProducts();
+
+    return {cart:userCart,products:existingproducts};
+
 }
