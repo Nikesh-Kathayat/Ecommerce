@@ -23,4 +23,4 @@ describe("Calculator tests",()=>{
         expect(result).toBe(9);
     })
 
-})
+}) 

@@ -87,7 +87,7 @@ exports.deleteProductFromCart= async(req,res)=>{
 
     // calculate the updated cost 
     const totalCost=findTotalCost(updatedProducts);
-
+ 
     // update the cart model with totalcost 
     await Cart.update({cost:totalCost},{where:{
         id:cart.id

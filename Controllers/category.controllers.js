@@ -9,7 +9,7 @@ exports.create = (req,res)=>{
 
     // id auto generating ,so no need
 
-    const category={
+    const category={ 
         name:req.body.name,     
         description:req.body.description
     };
