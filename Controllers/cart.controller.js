@@ -42,24 +42,25 @@ exports.update=async (req,res)=>{
     // spread operator
     const updatedProducts=[...existingproducts, ...newproducts];
 
-    userCart.setProducts(updatedProducts);
+    // calculate the updated cost 
+    const totalCost=findTotalCost(updatedProducts);
+
+    // update the cart model with totalcost 
+    await Cart.update({cost:totalCost},{where:{
+        id:cart.id
+    }});
+
+    await userCart.setProducts(updatedProducts);
 
     res.send(updatedProducts);
-
 }
+
+
 
 exports.findCart= async (req,res)=>{
 
-    const {products} =await findCartAndProducts(req.user.id);
-
-    let cost = 0;
-
-    for(let i=0;i<products.length;i++){
-        cost+= products[i].cost;
-    }
-
-    
-    res.send({products,totalCost:cost});
+    const {cart,products} =await findCartAndProducts(req.user.id);
+    res.send({products,totalCost:cart.cost});
 }
 
 exports.deleteProductFromCart= async(req,res)=>{
@@ -84,6 +85,14 @@ exports.deleteProductFromCart= async(req,res)=>{
 
     })
 
+    // calculate the updated cost 
+    const totalCost=findTotalCost(updatedProducts);
+
+    // update the cart model with totalcost 
+    await Cart.update({cost:totalCost},{where:{
+        id:cart.id
+    }});
+
     await userCart.setProducts(updatedProducts);
 
     res.send(updatedProducts);
@@ -107,3 +116,13 @@ const findCartAndProducts = async (userId)=>{
     return {cart:userCart,products:existingproducts};
 
 }
+const findTotalCost=(products)=>{
+    let cost = 0;
+
+    for(let i=0;i<products.length;i++){
+        cost+= products[i].cost;
+    }
+    return cost;
+
+}
+
