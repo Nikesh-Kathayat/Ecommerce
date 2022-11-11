@@ -1,10 +1,9 @@
-const { User,ROLES } = require("../models");
-
+const { User, ROLES } = require("../models");
 
 
 const checkDuplicateEmailOrUserName=(req,res,next)=>{
 
-    const{userName,email}=req.body;
+    const {userName, email}=req.body;
 
     const checkUserName=User.findOne({
         where:{
@@ -12,7 +11,7 @@ const checkDuplicateEmailOrUserName=(req,res,next)=>{
         }
     });
 
-    const checkEmail=User.findOne({
+    const checkEmail= User.findOne({
         where:{
             email:email
         }
@@ -27,9 +26,11 @@ const checkDuplicateEmailOrUserName=(req,res,next)=>{
         next();
     })
     .catch((err)=>{
-        res.status(500).send({message:err.message || "Somethng went wrong"});
+        res.status(500).send({message:err.message || "Something went wrong"});
     })
+
 }
+
 const checkRolesExists = (req,res,next)=>{
 
     const roles=req.body.roles;
@@ -38,14 +39,15 @@ const checkRolesExists = (req,res,next)=>{
 
         for(let i=0;i<roles.length;i++){
             if(!ROLES.includes(roles[i])){
-                res.status(400).send({message:"Failed! Roles doesnot exists"+ roles[i]});
-                return;
+                res.status(400).send({message:"Failed! Role doesnot exists "+ roles[i]});
+               return;
             }
         }
     }
+    
     next();
- 
 }
+
 const verifySignUp={
     checkDuplicateEmailOrUserName,
     checkRolesExists
