@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 const db=require("./models");
 
-db.sequelize.sync({force:false})
+db.sequelize.sync({force:true})
 .then(()=>{
     console.log("DB synced")
 })
