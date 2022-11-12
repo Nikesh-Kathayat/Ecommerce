@@ -62,7 +62,7 @@ exports.signIn = async (req,res) =>{
     res.send({id:user.id,
             userName:user.userName,
             email:user.email,
-            roles:user.roles,
+            roles:roles,
             accessToken:token
         })
 }
