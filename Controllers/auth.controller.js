@@ -15,7 +15,7 @@ exports.signup= async (req,res)=>{
     try{
     const user = await User.create({userName,email,password:bcrypt.hashSync(password,8)});
     const userRoles = await  Role.findAll({where:{name:{[Sequelize.Op.or] : roles}}});
-    console.log(userRoles);
+    // console.log(userRoles);      
     await  user.setRoles(userRoles);
     res.send({message:"User resgistered successfully"});
     }catch(e){
@@ -62,7 +62,7 @@ exports.signIn = async (req,res) =>{
     res.send({id:user.id,
             userName:user.userName,
             email:user.email,
-            roles:roles,
+            roles:user.roles,
             accessToken:token
         })
 }
